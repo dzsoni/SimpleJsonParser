@@ -9,7 +9,7 @@ SimpleJsonParser::~SimpleJsonParser()
 {
 }
 
-String SimpleJsonParser::FileToString(String path)
+String SimpleJsonParser::fileToString(String path)
 {
     String content = "";
 
@@ -22,7 +22,7 @@ String SimpleJsonParser::FileToString(String path)
         return String("");
     } //end if
 
-    //Serial.println(F("SPIFFS Mount succesfull"));
+    //Serial.println(F("SPIFFS Mount succesfull."));
 
     // read file
     if (SPIFFS.exists(path))
@@ -46,7 +46,7 @@ String SimpleJsonParser::FileToString(String path)
     return String("");
 }
 
-String SimpleJsonParser::GetJSONValueByKey(String text, String key)
+String SimpleJsonParser::getJSONValueByKey(String text, String key)
 {
     if (text.length() == 0)
     {

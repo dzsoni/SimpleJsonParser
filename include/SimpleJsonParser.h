@@ -20,9 +20,9 @@ private:
 public:
     SimpleJsonParser();
     ~SimpleJsonParser();
-
-    String FileToString(String path);
-    String GetJSONValueByKey(String text, String key);
+    String getJSONValueQuickByKey(String path, String key){return getJSONValueByKey(fileToString(path),key);}; 
+    String fileToString(String path);
+    String getJSONValueByKey(String text, String key);
 };
 
 #endif
