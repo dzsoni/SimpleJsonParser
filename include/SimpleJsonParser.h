@@ -17,12 +17,15 @@ class SimpleJsonParser
 {
 private:
     /* data */
+    void SkipWhiteSpace(File f);
+    
 public:
     SimpleJsonParser();
     ~SimpleJsonParser();
-    String getJSONValueQuickByKey(String path, String key){return getJSONValueByKey(fileToString(path),key);}; 
+    String getJSONValueByKeyFromFile(String path, String key);
+    String getJSONValueByKey(String path, String key){return getJSONValueByKeyFromString(fileToString(path),key);}; 
     String fileToString(String path);
-    String getJSONValueByKey(String text, String key);
+    String getJSONValueByKeyFromString(String text, String key);
 };
 
 #endif
