@@ -131,7 +131,7 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         }
         if (!found && !f.available())
         {
-            Serial.println(F("Key not found."));
+            //Serial.println(F("Key not found."));
             f.close();
             return String("");
         }
