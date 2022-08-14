@@ -90,12 +90,13 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
     //Serial.println(F("SPIFFS Mount succesfull."));
 
     // read file
+    //Serial.println(path);
     if (SPIFFS.exists(path))
     {
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            Serial.println(F("File open failed."));
+            //Serial.println(F("File open failed."));
             return String("");
         }
         String searchPhrase = String("\"");
