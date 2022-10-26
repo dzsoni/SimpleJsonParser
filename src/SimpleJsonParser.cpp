@@ -54,15 +54,28 @@ String SimpleJsonParser::getJSONValueByKeyFromString(String jsontext, String key
 
     String searchPhrase = String("\"");
     searchPhrase.concat(key);
-    searchPhrase.concat("\":\"");
+    searchPhrase.concat("\"");
     int fromPosition = jsontext.indexOf(searchPhrase, 0);
-    if (fromPosition == -1)
+     if (fromPosition == -1)
     {
         // return because there is no status or it's null
         return String("");
     }
-
-    fromPosition = fromPosition + searchPhrase.length();
+    fromPosition = _skipWhiteSpace(jsontext,fromPosition);
+    if(jsontext.substring(fromPosition,fromPosition)!=":")
+    {
+        _SIMPLEJSON_PL(F("Missing ':' from JSON"));
+        return String("");
+    }
+    fromPosition++;
+    fromPosition = _skipWhiteSpace(jsontext,fromPosition);
+    if(jsontext.substring(fromPosition,fromPosition)!="\"")
+    {
+        _SIMPLEJSON_PL(F("Missing '\"' from JSON"));
+        return String("");
+    }
+    fromPosition++;
+   
     int toPosition = jsontext.indexOf("\"", fromPosition);
 
     if (toPosition == -1)
@@ -184,7 +197,7 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
 int _skipWhiteSpace(String jsontext, int frompos)
 {
     String nextch;
-    while (frompos <= jsontext.length() - 1)
+    while (frompos < jsontext.length() )
     {
         nextch = jsontext.substring(frompos + 1, frompos + 1);
         if (nextch == " " || nextch == "\n" || nextch == "\r" || nextch == "\t")

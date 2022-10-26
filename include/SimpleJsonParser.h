@@ -12,12 +12,23 @@
 
 #include <SPIFFSEditor.h>
 
+//#define DEBUG_SIMPLEJSON
+
+#ifdef DEBUG_SIMPLEJSON
+#define _SIMPLEJSON_PP(a) Serial.print(a);
+#define _SIMPLEJSON_PL(a) Serial.println(a);
+#else
+#define _SIMPLEJSON_PP(a)
+#define _SIMPLEJSON_PL(a)
+#endif
+
 
 class SimpleJsonParser
 {
 private:
     /* data */
     void _skipWhiteSpace(File f);
+    int  _skipWhiteSpace(String jsontext, int frompos);
     
 public:
     SimpleJsonParser();
