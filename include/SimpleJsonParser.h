@@ -17,7 +17,7 @@ class SimpleJsonParser
 {
 private:
     /* data */
-    void SkipWhiteSpace(File f);
+    void _skipWhiteSpace(File f);
     
 public:
     SimpleJsonParser();
