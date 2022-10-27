@@ -26,7 +26,6 @@
 class SimpleJsonParser
 {
 private:
-    /* data */
     void _skipWhiteSpace(File f);
     int  _skipWhiteSpace(String jsontext, int frompos);
     

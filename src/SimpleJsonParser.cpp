@@ -56,20 +56,25 @@ String SimpleJsonParser::getJSONValueByKeyFromString(String jsontext, String key
     searchPhrase.concat(key);
     searchPhrase.concat("\"");
     int fromPosition = jsontext.indexOf(searchPhrase, 0);
+    
+    Serial.println(String("!")+String(fromPosition));
      if (fromPosition == -1)
     {
         // return because there is no status or it's null
         return String("");
     }
+    fromPosition=fromPosition+key.length()+2;
+    Serial.println(String("!!")+String(fromPosition)+String(jsontext.substring(fromPosition , fromPosition + 1)));
+
     fromPosition = _skipWhiteSpace(jsontext,fromPosition);
-    if(jsontext.substring(fromPosition,fromPosition)!=":")
+    if(jsontext.substring(fromPosition,fromPosition+1)!=":")
     {
         _SIMPLEJSON_PL(F("Missing ':' from JSON"));
         return String("");
     }
     fromPosition++;
     fromPosition = _skipWhiteSpace(jsontext,fromPosition);
-    if(jsontext.substring(fromPosition,fromPosition)!="\"")
+    if(jsontext.substring(fromPosition,fromPosition+1)!="\"")
     {
         _SIMPLEJSON_PL(F("Missing '\"' from JSON"));
         return String("");
@@ -194,12 +199,12 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
     }
 }
 
-int _skipWhiteSpace(String jsontext, int frompos)
+int SimpleJsonParser::_skipWhiteSpace(String jsontext, int frompos)
 {
     String nextch;
     while (frompos < jsontext.length() )
     {
-        nextch = jsontext.substring(frompos + 1, frompos + 1);
+        nextch = jsontext.substring(frompos , frompos + 1);
         if (nextch == " " || nextch == "\n" || nextch == "\r" || nextch == "\t")
         {
             frompos++;
