@@ -19,9 +19,9 @@ String SimpleJsonParser::fileToString(String path)
         Serial.println(F("SPIFFS Mount failed"));
 
         return String("");
-    } //end if
+    } // end if
 
-    //Serial.println(F("SPIFFS Mount succesfull."));
+    // Serial.println(F("SPIFFS Mount succesfull."));
 
     // read file
     if (SPIFFS.exists(path))
@@ -31,7 +31,7 @@ String SimpleJsonParser::fileToString(String path)
         {
             Serial.println(F("file open failed"));
             return String("");
-        } //end if
+        } // end if
 
         // read file
 
@@ -40,38 +40,56 @@ String SimpleJsonParser::fileToString(String path)
             content += char(f.read());
         }
         f.close();
-        return content; //f.readString();
+        return content; // f.readString();
     }
     return String("");
 }
 
-String SimpleJsonParser::getJSONValueByKeyFromString(String text, String key)
+String SimpleJsonParser::getJSONValueByKeyFromString(String jsontext, String key)
 {
-    if (text.length() == 0)
+    if (jsontext.length() == 0)
     {
         return String("");
     }
 
     String searchPhrase = String("\"");
     searchPhrase.concat(key);
-    searchPhrase.concat("\":\"");
-    int fromPosition = text.indexOf(searchPhrase, 0);
+    searchPhrase.concat("\"");
+    int fromPosition = jsontext.indexOf(searchPhrase, 0);
+
+    Serial.println(String("!") + String(fromPosition));
     if (fromPosition == -1)
     {
         // return because there is no status or it's null
         return String("");
     }
+    fromPosition = fromPosition + key.length() + 2;
+    Serial.println(String("!!") + String(fromPosition) + String(jsontext.substring(fromPosition, fromPosition + 1)));
 
-    fromPosition = fromPosition + searchPhrase.length();
-    int toPosition = text.indexOf("\"", fromPosition);
+    fromPosition = _skipWhiteSpace(jsontext, fromPosition);
+    if (jsontext.substring(fromPosition, fromPosition + 1) != ":")
+    {
+        _SIMPLEJSON_PL(F("Missing ':' from JSON"));
+        return String("");
+    }
+    fromPosition++;
+    fromPosition = _skipWhiteSpace(jsontext, fromPosition);
+    if (jsontext.substring(fromPosition, fromPosition + 1) != "\"")
+    {
+        _SIMPLEJSON_PL(F("Missing '\"' from JSON"));
+        return String("");
+    }
+    fromPosition++;
+
+    int toPosition = jsontext.indexOf("\"", fromPosition);
 
     if (toPosition == -1)
     {
         // return because there is no end quote
         return String("");
     }
-    text.remove(toPosition);
-    return text.substring(fromPosition);
+    jsontext.remove(toPosition);
+    return jsontext.substring(fromPosition);
 }
 
 String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
@@ -82,21 +100,21 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
     if (!SPIFFS.begin())
     {
         // Serious problem
-        Serial.println(F("SPIFFS Mount failed."));
+        _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
 
         return String("");
-    } //end if
+    } // end if
 
-    //Serial.println(F("SPIFFS Mount succesfull."));
+    // Serial.println(F("SPIFFS Mount succesfull."));
 
     // read file
-    //Serial.println(path);
+    // Serial.println(path);
     if (SPIFFS.exists(path))
     {
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            //Serial.println(F("File open failed."));
+            _SIMPLEJSON_PL(F("File open failed."));
             return String("");
         }
         String searchPhrase = String("\"");
@@ -110,11 +128,11 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         while (f.available())
         {
             relativepoz = 0;
-            s="";
+            s = "";
             while (f.available())
-            {   
-                
-                if (( (c=(char)f.read()) != charpt[relativepoz]) || (relativepoz+1 > searchPhrase.length()) || (f.available() < (int)(searchPhrase.length() - relativepoz+1)))
+            {
+
+                if (((c = (char)f.read()) != charpt[relativepoz]) || (relativepoz + 1 > searchPhrase.length()) || (f.available() < (int)(searchPhrase.length() - relativepoz + 1)))
                 {
                     break;
                 }
@@ -126,42 +144,41 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
                 }
             }
             if (found)
-           {
-                 break;
+            {
+                break;
             }
         }
         if (!found && !f.available())
         {
-            //Serial.println(F("Key not found."));
+            _SIMPLEJSON_PL(F("Key not found."));
             f.close();
             return String("");
         }
 
-        SkipWhiteSpace(f);
+        _skipWhiteSpace(f);
 
-        
         if ((c = (char)f.read()) != ':')
         {
-            //Serial.println(F("JSon file error ':' is missing."));
+            _SIMPLEJSON_PL(F("JSon file error ':' is missing."));
             f.close();
             return String("");
         }
-        SkipWhiteSpace(f);
+        _skipWhiteSpace(f);
 
-        if((c = (char)f.read()) != '"')
+        if ((c = (char)f.read()) != '"')
         {
-            //Serial.println(F("JSon file error '\"' is missing."));
+            _SIMPLEJSON_PL(F("JSon file error '\"' is missing."));
             f.close();
             return String("");
         }
         String value;
         while (((c = (char)f.read()) != '"') && f.available())
         {
-         value+=c;   
+            value += c;
         }
-        if(!f.available())
+        if (!f.available())
         {
-            //Serial.println(F("JSon file error."));
+            _SIMPLEJSON_PL(F("JSon file error."));
             f.close();
             return String("");
         }
@@ -170,7 +187,7 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
     }
     return String("");
 }
-void SimpleJsonParser::SkipWhiteSpace(File f)
+void SimpleJsonParser::_skipWhiteSpace(File f)
 {
     if (f)
     {
@@ -180,4 +197,284 @@ void SimpleJsonParser::SkipWhiteSpace(File f)
             f.read();
         }
     }
+}
+
+int SimpleJsonParser::_skipWhiteSpace(String jsontext, int frompos)
+{
+    String nextch;
+    while (frompos < jsontext.length())
+    {
+        nextch = jsontext.substring(frompos, frompos + 1);
+        if (nextch == " " || nextch == "\n" || nextch == "\r" || nextch == "\t")
+        {
+            frompos++;
+        }
+        else
+        {
+            return frompos;
+        }
+    }
+    return frompos;
+}
+int SimpleJsonParser::getNumberOfObjectsFromFile(String path)
+{
+    int count = 0;
+    char c;
+    if (!SPIFFS.begin())
+    {
+        // Serious problem
+        _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
+
+        return -1;
+    } // end if
+
+    if (SPIFFS.exists(path))
+    {
+        File f = SPIFFS.open(path, "r");
+        if (!f)
+        {
+            _SIMPLEJSON_PL(F("File open failed."));
+            return -1;
+        }
+
+        while (f.available())
+        {
+            if ((c = (char)f.read()) == '"')
+            {
+                _skipWhiteSpace(f);
+                if (c = (char)f.read() == ':')
+                {
+                    _skipWhiteSpace(f);
+                    if (c = (char)f.read() == '"')
+                    {
+                        count++;
+                    }
+                }
+            }
+        }
+        f.close();
+        return count;
+    }
+    return -1;
+}
+
+int SimpleJsonParser::getNumberOfObjectsFromString(String jsontxt)
+{
+    int count = 0;
+    for (int i = 0; i < jsontxt.length(); i++)
+    {
+        if (jsontxt.substring(i, i + 1) == "\"")
+        {
+            i++;
+            i = _skipWhiteSpace(jsontxt, i);
+            if (jsontxt.substring(i, i + 1) == ":")
+            {
+                i++;
+                i = _skipWhiteSpace(jsontxt, i);
+                if (jsontxt.substring(i, i + 1) == "\"")
+                {
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
+}
+
+String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
+{
+    uint32_t count = 0;
+    uint32_t oldpt = 0, newpt = 0;
+    String result;
+    char c;
+    if (!SPIFFS.begin())
+    {
+        // Serious problem
+        _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
+
+        return String("");
+    } // end if
+
+    if (SPIFFS.exists(path))
+    {
+        File f = SPIFFS.open(path, "r");
+        if (!f)
+        {
+            _SIMPLEJSON_PL(F("File open failed."));
+            return String("");
+        }
+
+        while (f.available())
+        {
+            if ((c = (char)f.read()) == '"')
+            {
+                oldpt = newpt;
+                newpt = f.position();
+                _skipWhiteSpace(f);
+                if (c = (char)f.read() == ':' && oldpt)
+                {
+                    _skipWhiteSpace(f);
+                    if (c = (char)f.read() == '"')
+                    {
+                        if (index == count)
+                        {
+                            f.seek(oldpt, SeekSet);
+                            while (oldpt < newpt - 1)
+                            {
+                                result += String((char)f.read());
+                                oldpt++;
+                            }
+                            return result;
+                        }
+                        count++;
+                        oldpt=0;
+                        newpt=f.position();
+                    }
+                }
+            }
+        }
+    }
+    return String("");
+}
+String SimpleJsonParser::getJSONValuebyIndexFromFile(String path,int index)
+{
+    uint32_t count = 0;
+    uint32_t oldpt = 0, newpt = 0;
+    String result;
+    char c;
+    if (!SPIFFS.begin())
+    {
+        // Serious problem
+        _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
+
+        return String("");
+    } // end if
+
+    if (SPIFFS.exists(path))
+    {
+        File f = SPIFFS.open(path, "r");
+        if (!f)
+        {
+            _SIMPLEJSON_PL(F("File open failed."));
+            return String("");
+        }
+
+        while (f.available())
+        {
+            if ((c = (char)f.read()) == '"')
+            {
+                oldpt = newpt;
+                newpt = f.position();
+                _skipWhiteSpace(f);
+                c = (char)f.read();
+                if (c  == '}' && oldpt)
+                {
+                    if (index == count)
+                        {
+                            f.seek(oldpt, SeekSet);
+                            while (oldpt < newpt - 1)
+                            {
+                                result += String((char)f.read());
+                                oldpt++;
+                            }
+                            return result;
+                        }
+                    count++;
+                }
+                else if (c == ',' && oldpt)
+                {
+                    _skipWhiteSpace(f);
+                    if (c = (char)f.read() == '"')
+                    {
+                        if (index == count)
+                        {
+                            f.seek(oldpt, SeekSet);
+                            while (oldpt < newpt - 1)
+                            {
+                                result += String((char)f.read());
+                                oldpt++;
+                            }
+                            return result;
+                        }
+                        count++;
+                        newpt=f.position();
+                        oldpt=0;
+                    }
+                }
+            }
+        }
+    }
+    return String("");
+
+}
+String SimpleJsonParser::getJSONKeybyIndexFromString(String jsontxt, int index)
+{
+    int count = 0;
+    uint32_t oldpt = 0, newpt = 0;
+    for (uint32_t i = 0; i < jsontxt.length(); i++)
+    {
+        if (jsontxt.substring(i, i + 1) == "\"")
+        {
+            oldpt = newpt;
+            newpt = i;
+            i++;
+            i = _skipWhiteSpace(jsontxt, i);
+            if (jsontxt.substring(i, i + 1) == ":" && oldpt)
+            {
+                i++;
+                i = _skipWhiteSpace(jsontxt, i);
+                if (jsontxt.substring(i, i + 1) == "\"")
+                {
+                    if (index == count)
+                    {
+                        return jsontxt.substring(oldpt + 1, newpt);
+                    }
+                    count++;
+                    oldpt=0;
+                    newpt=i;
+                }
+            }
+        }
+    }
+    return String("");
+}
+
+String SimpleJsonParser::getJSONValuebyIndexFromString(String jsontxt, int index)
+{
+    int count = 0;
+    uint32_t oldpt = 0, newpt = 0;
+    for (uint32_t i = 0; i < jsontxt.length(); i++)
+    {
+        if (jsontxt.substring(i, i + 1) == "\"")
+        {
+            oldpt = newpt;
+            newpt = i;
+            i++;
+            i = _skipWhiteSpace(jsontxt, i);
+            if (jsontxt.substring(i,i+1) == "}" && oldpt)
+            {
+                if (index == count)
+                    {
+                        return jsontxt.substring(oldpt + 1, newpt);
+                    }
+                count++;//shouldn't be here
+            }
+            else if (jsontxt.substring(i, i + 1) == "," && oldpt)
+            {
+                i++;
+                i = _skipWhiteSpace(jsontxt, i);
+                if (jsontxt.substring(i, i + 1) == "\"")
+                {
+                    if (index == count)
+                    {
+                        return jsontxt.substring(oldpt + 1, newpt);
+                    }
+                    count++;
+                    oldpt=0;
+                    newpt=i;
+                }
+            }
+        }
+    }
+    return String("");
 }
