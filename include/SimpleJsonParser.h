@@ -33,7 +33,6 @@ public:
     SimpleJsonParser();
     ~SimpleJsonParser();
     String getJSONValueByKeyFromFile(String path, String key);
-    //String getJSONValueByKey(String path, String key){return getJSONValueByKeyFromString(fileToString(path),key);}; 
     String fileToString(String path);
     String getJSONValueByKeyFromString(String text, String key);
     int    getNumberOfObjectsFromFile(String path);
