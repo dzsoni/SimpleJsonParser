@@ -29,7 +29,7 @@ String SimpleJsonParser::fileToString(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            Serial.println(F("file open failed"));
+            _SIMPLEJSON_PL(F("File open failed."));
             return String("");
         } // end if
 
@@ -57,14 +57,12 @@ String SimpleJsonParser::getJSONValueByKeyFromString(String jsontext, String key
     searchPhrase.concat("\"");
     int fromPosition = jsontext.indexOf(searchPhrase, 0);
 
-    Serial.println(String("!") + String(fromPosition));
     if (fromPosition == -1)
     {
         // return because there is no status or it's null
         return String("");
     }
     fromPosition = fromPosition + key.length() + 2;
-    Serial.println(String("!!") + String(fromPosition) + String(jsontext.substring(fromPosition, fromPosition + 1)));
 
     fromPosition = _skipWhiteSpace(jsontext, fromPosition);
     if (jsontext.substring(fromPosition, fromPosition + 1) != ":")
