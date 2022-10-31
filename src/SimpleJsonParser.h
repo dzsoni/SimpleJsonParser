@@ -35,8 +35,8 @@ public:
     String getJSONValueByKeyFromFile(String path, String key);
     String fileToString(String path);
     String getJSONValueByKeyFromString(String text, String key);
-    int    getNumberOfObjectsFromFile(String path);
-    int    getNumberOfObjectsFromString(String jsontxt);
+    int    getNumberOfEntriesFromFile(String path);
+    int    getNumberOfEntriesFromString(String jsontxt);
     String getJSONKeybyIndexFromFile(String path, int index);
     String getJSONKeybyIndexFromString(String jsontxt, int index);
     String getJSONValuebyIndexFromFile(String path,int index);
