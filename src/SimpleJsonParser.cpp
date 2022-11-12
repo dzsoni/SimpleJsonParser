@@ -216,7 +216,7 @@ int SimpleJsonParser::_skipWhiteSpace(String jsontext, int frompos)
     }
     return frompos;
 }
-int SimpleJsonParser::getNumberOfObjectsFromFile(String path)
+int SimpleJsonParser::getNumberOfEntriessFromFile(String path)
 {
     int count = 0;
     char c;
@@ -258,7 +258,7 @@ int SimpleJsonParser::getNumberOfObjectsFromFile(String path)
     return -1;
 }
 
-int SimpleJsonParser::getNumberOfObjectsFromString(String jsontxt)
+int SimpleJsonParser::getNumberOfEntriesFromString(String jsontxt)
 {
     int count = 0;
     for (int i = 0; i < jsontxt.length(); i++)
