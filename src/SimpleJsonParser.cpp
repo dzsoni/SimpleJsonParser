@@ -114,7 +114,6 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
             _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return String("");
         }
-        Serial.println(path);
         String searchPhrase = String("\"");
         searchPhrase.concat(key);
         searchPhrase.concat("\"");
