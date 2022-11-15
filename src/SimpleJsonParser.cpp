@@ -29,7 +29,7 @@ String SimpleJsonParser::fileToString(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            Serial.println(F("file open failed"));
+            _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return String("");
         } // end if
 
@@ -111,7 +111,7 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(F("File open failed."));
+            _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return String("");
         }
         String searchPhrase = String("\"");
@@ -230,7 +230,7 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(F("File open failed."));
+            _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return -1;
         }
 
@@ -297,7 +297,7 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(F("File open failed."));
+            _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return String("");
         }
 
@@ -370,7 +370,7 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, int index)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(F("File open failed."));
+            _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return String("");
         }
 
