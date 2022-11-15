@@ -114,6 +114,7 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
             _SIMPLEJSON_PL(String(F("File open failed.")+path));
             return String("");
         }
+        Serial.println(path);
         String searchPhrase = String("\"");
         searchPhrase.concat(key);
         searchPhrase.concat("\"");
@@ -181,6 +182,9 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         }
         f.close();
         return value;
+    }
+    else{
+        _SIMPLEJSON_PL(String(F("File not found:")+path));
     }
     return String("");
 }
@@ -251,6 +255,9 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
         }
         f.close();
         return count;
+    }
+     else{
+        _SIMPLEJSON_PL(String(F("File not found:")+path));
     }
     return -1;
 }
@@ -349,6 +356,9 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
             }
         }
     }
+    else{
+        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    }
     return String("");
 }
 String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, int index)
@@ -424,6 +434,9 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, int index)
                 }
             }
         }
+    }
+     else{
+        _SIMPLEJSON_PL(String(F("File not found:")+path));
     }
 
     return String("");

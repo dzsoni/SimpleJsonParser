@@ -12,7 +12,7 @@
 
 #include <SPIFFSEditor.h>
 
-//#define DEBUG_SIMPLEJSON
+#define DEBUG_SIMPLEJSON
 
 #ifdef DEBUG_SIMPLEJSON
 #define _SIMPLEJSON_PP(a) Serial.print(a);
