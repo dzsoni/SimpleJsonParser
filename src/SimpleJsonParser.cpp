@@ -331,10 +331,10 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
                 if (secpt && frstpt && f.available() >= 2)
                 {
                     _skipWhiteSpace(f);
-                    if (c = (char)f.read() == ':')
+                    if ((c = (char)f.read()) == ':')
                     {
                         _skipWhiteSpace(f);
-                        if (c = (char)f.read() == '"')
+                        if ((c = (char)f.read()) == '"')
                         {
                             if (index == count)
                             {
