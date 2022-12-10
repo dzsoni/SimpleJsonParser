@@ -2,7 +2,7 @@
 #define SIMPLEJSONPARSER_h
 
 #include <Arduino.h>
-#include <string>
+#include <WString.h>
 
 #ifdef ESP32
 #include <FS.h>
