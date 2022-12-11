@@ -308,12 +308,11 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
         }
 
         while (f.available())
-        {
-
-            if (((c = (char)f.read()) == '{' || c == ',') && !frstpt)
+        {  
+            if ((((c=(char)f.read()) == ',' || (c=='{'))) && (!frstpt))
             {
                 _skipWhiteSpace(f);
-                if (c = (char)f.read() == '"')
+                if ((c = (char)f.read()) == '"')
                 {
                     frstpt = f.position();
                     continue;
@@ -325,10 +324,10 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
                 }
             }
 
-            if ((c = (char)f.read()) == '"')
+            if (c == '"')
             {
                 secpt = f.position();
-                if (secpt && frstpt && f.available() >= 2)
+                if (secpt && frstpt && (f.available() >= 2))
                 {
                     _skipWhiteSpace(f);
                     if ((c = (char)f.read()) == ':')
