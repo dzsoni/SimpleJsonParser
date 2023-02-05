@@ -32,7 +32,7 @@ You can get the key by index:
 String getJSONKeybyIndexFromFile(String path, int index);
 String getJSONKeybyIndexFromString(String jsontxt, int index);
 ```
-Makeing string from file:
+Making string from file:
 
 ```
 String fileToString(String path);
