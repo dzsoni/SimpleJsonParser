@@ -29,7 +29,7 @@ String SimpleJsonParser::fileToString(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         } // end if
 
@@ -111,7 +111,7 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         }
         String searchPhrase = String("\"");
@@ -182,8 +182,9 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         f.close();
         return value;
     }
-    else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
     return String("");
 }
@@ -191,8 +192,8 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
 {
     if (f)
     {
-        String s;
-        while ((s = f.peek()) == " " || s == "\n" || s == "\r" || s == "\t")
+        char s;
+        while ((s = (char) f.peek()) == ' ' || s == '\n' || s == '\r' || s == '\t')
         {
             f.read();
         }
@@ -233,7 +234,7 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return -1;
         }
 
@@ -255,8 +256,9 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
         f.close();
         return count;
     }
-     else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
     return -1;
 }
@@ -303,13 +305,13 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         }
 
         while (f.available())
-        {  
-            if ((((c=(char)f.read()) == ',' || (c=='{'))) && (!frstpt))
+        {
+            if ((((c = (char)f.read()) == ',' || (c == '{'))) && (!frstpt))
             {
                 _skipWhiteSpace(f);
                 if ((c = (char)f.read()) == '"')
@@ -354,8 +356,9 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
             }
         }
     }
-    else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
     return String("");
 }
@@ -378,7 +381,7 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, int index)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         }
 
@@ -433,8 +436,9 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, int index)
             }
         }
     }
-     else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
 
     return String("");

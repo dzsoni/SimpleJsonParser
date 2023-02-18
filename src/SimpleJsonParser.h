@@ -5,12 +5,12 @@
 #include <WString.h>
 
 #ifdef ESP32
-#include <FS.h>
 #include <SPIFFS.h>
 #elif defined(ESP8266)
 #endif
 
-#include <SPIFFSEditor.h>
+#include <FS.h>
+
 
 //#define DEBUG_SIMPLEJSON
 
@@ -22,6 +22,22 @@
 #define _SIMPLEJSON_PL(a)
 #endif
 
+template<typename T>
+class SJPT
+{
+    private:
+    T&  obj;
+    void _SkipWhiteSpace();
+
+    public:
+    SJPT( T& typ): obj(typ){};
+};
+
+template<typename T>
+void SJPT<T>::_SkipWhiteSpace()
+{
+   
+}
 
 class SimpleJsonParser
 {
