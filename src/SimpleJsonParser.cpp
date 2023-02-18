@@ -191,8 +191,8 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
 {
     if (f)
     {
-        String s;
-        while ((s = f.peek()) == " " || s == "\n" || s == "\r" || s == "\t")
+        char s;
+        while ((s = (char) f.peek()) == ' ' || s == '\n' || s == '\r' || s == '\t')
         {
             f.read();
         }
