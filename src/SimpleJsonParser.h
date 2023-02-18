@@ -10,7 +10,7 @@
 #elif defined(ESP8266)
 #endif
 
-#include <SPIFFSEditor.h>
+#include <FS.h>
 
 //#define DEBUG_SIMPLEJSON
 

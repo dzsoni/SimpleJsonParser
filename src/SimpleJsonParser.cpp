@@ -243,10 +243,10 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
             if ((c = (char)f.read()) == '"')
             {
                 _skipWhiteSpace(f);
-                if (c = (char)f.read() == ':')
+                if ((c = (char)f.read()) == ':')
                 {
                     _skipWhiteSpace(f);
-                    if (c = (char)f.read() == '"')
+                    if ((c = (char)f.read()) == '"')
                     {
                         count++;
                     }
