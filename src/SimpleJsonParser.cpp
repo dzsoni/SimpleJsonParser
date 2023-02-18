@@ -192,10 +192,11 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
 {
     if (f)
     {
-        char s;
-        while ((s = (char) f.peek()) == ' ' || s == '\n' || s == '\r' || s == '\t')
+        int s = f.peek();
+        while ( f.available() && (s == ' ' || s == '\n' || s == '\r' || s == '\t'))
         {
             f.read();
+            s = f.peek();
         }
     }
 }
