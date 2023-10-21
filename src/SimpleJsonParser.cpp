@@ -191,16 +191,15 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
 {
     if (f)
     {
-        int s = f.peek();
-        while ( f.available() && (s == ' ' || s == '\n' || s == '\r' || s == '\t'))
+        String s;
+        while ((s = f.peek()) == " " || s == "\n" || s == "\r" || s == "\t")
         {
             f.read();
-            s = f.peek();
         }
     }
 }
 
-int SimpleJsonParser::_skipWhiteSpace(String jsontext, int frompos)
+int SimpleJsonParser::_skipWhiteSpace(String jsontext, unsigned int frompos)
 {
     String nextch;
     while (frompos < jsontext.length())
@@ -243,10 +242,10 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
             if ((c = (char)f.read()) == '"')
             {
                 _skipWhiteSpace(f);
-                if ((c = (char)f.read()) == ':')
+                if (c = (char)f.read() == ':')
                 {
                     _skipWhiteSpace(f);
-                    if ((c = (char)f.read()) == '"')
+                    if (c = (char)f.read() == '"')
                     {
                         count++;
                     }
@@ -265,7 +264,7 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
 int SimpleJsonParser::getNumberOfEntriesFromString(String jsontxt)
 {
     int count = 0;
-    for (int i = 0; i < jsontxt.length(); i++)
+    for (unsigned int i = 0; i < jsontxt.length(); i++)
     {
         if (jsontxt.substring(i, i + 1) == "\"")
         {
@@ -285,7 +284,7 @@ int SimpleJsonParser::getNumberOfEntriesFromString(String jsontxt)
     return count;
 }
 
-String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
+String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, uint32_t index)
 {
     uint32_t count = 0;
     uint32_t frstpt = 0, secpt = 0;
@@ -360,7 +359,7 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, int index)
     }
     return String("");
 }
-String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, int index)
+String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, uint32_t index)
 {
     uint32_t count = 0;
     uint32_t oldpt = 0, newpt = 0;
