@@ -10,7 +10,7 @@
 #elif defined(ESP8266)
 #endif
 
-#include <FS.h>
+#include <SPIFFSEditor.h>
 
 //#define DEBUG_SIMPLEJSON
 
@@ -27,7 +27,7 @@ class SimpleJsonParser
 {
 private:
     void _skipWhiteSpace(File f);
-    int  _skipWhiteSpace(String jsontext, int frompos);
+    int  _skipWhiteSpace(String jsontext, unsigned int frompos);
     
 public:
     SimpleJsonParser();
@@ -37,9 +37,9 @@ public:
     String getJSONValueByKeyFromString(String text, String key);
     int    getNumberOfEntriesFromFile(String path);
     int    getNumberOfEntriesFromString(String jsontxt);
-    String getJSONKeybyIndexFromFile(String path, int index);
+    String getJSONKeybyIndexFromFile(String path, uint32_t index);
     String getJSONKeybyIndexFromString(String jsontxt, int index);
-    String getJSONValuebyIndexFromFile(String path,int index);
+    String getJSONValuebyIndexFromFile(String path,uint32_t index);
     String getJSONValuebyIndexFromString(String jsontxt,int index);
 };
 
