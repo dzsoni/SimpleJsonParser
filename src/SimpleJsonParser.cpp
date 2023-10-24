@@ -29,7 +29,7 @@ String SimpleJsonParser::fileToString(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         } // end if
 
@@ -111,7 +111,7 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         }
         String searchPhrase = String("\"");
@@ -182,8 +182,9 @@ String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
         f.close();
         return value;
     }
-    else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
     return String("");
 }
@@ -233,7 +234,7 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return -1;
         }
 
@@ -255,8 +256,9 @@ int SimpleJsonParser::getNumberOfEntriesFromFile(String path)
         f.close();
         return count;
     }
-     else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
     return -1;
 }
@@ -303,13 +305,13 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, uint32_t index)
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         }
 
         while (f.available())
-        {  
-            if ((((c=(char)f.read()) == ',' || (c=='{'))) && (!frstpt))
+        {
+            if ((((c = (char)f.read()) == ',' || (c == '{'))) && (!frstpt))
             {
                 _skipWhiteSpace(f);
                 if ((c = (char)f.read()) == '"')
@@ -354,8 +356,9 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, uint32_t index)
             }
         }
     }
-    else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
     return String("");
 }
@@ -378,7 +381,7 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, uint32_t index
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
-            _SIMPLEJSON_PL(String(F("File open failed.")+path));
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
             return String("");
         }
 
@@ -433,8 +436,9 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, uint32_t index
             }
         }
     }
-     else{
-        _SIMPLEJSON_PL(String(F("File not found:")+path));
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
     }
 
     return String("");
@@ -536,4 +540,95 @@ String SimpleJsonParser::getJSONValuebyIndexFromString(String jsontxt, int index
         }
     }
     return String("");
+}
+std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFromFile(String path)
+{
+    std::vector<std::pair<String, String>> result;
+
+    uint32_t count = 0;
+    uint32_t frstpt = 0, secpt = 0, thipt = 0, forpt = 0;
+    String result;
+    char c;
+    if (!SPIFFS.begin())
+    {
+        // Serious problem
+        _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
+
+        return String("");
+    } // end if
+
+    if (SPIFFS.exists(path))
+    {
+        File f = SPIFFS.open(path, "r");
+        if (!f)
+        {
+            _SIMPLEJSON_PL(String(F("File open failed.") + path));
+            return String("");
+        }
+
+        while (f.available())
+        {
+            if ((((c = (char)f.read()) == ',' || (c == '{'))) && (!frstpt))
+            {
+                _skipWhiteSpace(f);
+                if ((c = (char)f.read()) == '"')
+                {
+                    frstpt = f.position();
+                    continue;
+                }
+                else
+                {
+                    _SIMPLEJSON_PL("Corrupt json:{ or , must follow a \"");
+                    return String("");
+                }
+            }
+
+            if (c == '"')
+            {
+
+                if (frstpt && secpt && thipt && !forpt && (f.available() >= 2))
+                {
+                    forpt = f.position();
+                    String key = "";
+                    String value = "";
+                    f.seek(frstpt, SeekSet);
+                    while (frstpt < secpt - 1)
+                    {
+                        key += String((char)f.read());
+                        frstpt++;
+                    }
+
+                    f.seek(thipt, SeekSet);
+                    while (thipt < forpt - 1)
+                    {
+                        value += String((char)f.read());
+                        thipt++;
+                    }
+                    result.emplace_back(std::make_pair(key, value));
+                    frstpt = 0;
+                    secpt = 0;
+                    thipt = 0;
+                    forpt = 0;
+                }
+                else if (frstpt && !secpt && !thipt && !forpt && (f.available() >= 2))
+                {
+                    secpt = f.position();
+                    _skipWhiteSpace(f);
+                    if ((c = (char)f.read()) == ':')
+                    {
+                        _skipWhiteSpace(f);
+                        if ((c = (char)f.read()) == '"')
+                        {
+                            thipt = f.position();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        _SIMPLEJSON_PL(String(F("File not found:") + path));
+    }
+    return result;
 }

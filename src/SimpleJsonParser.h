@@ -3,14 +3,10 @@
 
 #include <Arduino.h>
 #include <WString.h>
+#include <vector>
+#include <utility>
 
-#ifdef ESP32
-#include <FS.h>
-#include <SPIFFS.h>
-#elif defined(ESP8266)
-#endif
-
-#include <SPIFFSEditor.h>
+#include "FS.h"
 
 //#define DEBUG_SIMPLEJSON
 
@@ -41,6 +37,7 @@ public:
     String getJSONKeybyIndexFromString(String jsontxt, int index);
     String getJSONValuebyIndexFromFile(String path,uint32_t index);
     String getJSONValuebyIndexFromString(String jsontxt,int index);
+    std::vector<std::pair<String,String>> extractKeysandValuesFromFile(String path);
 };
 
 #endif
