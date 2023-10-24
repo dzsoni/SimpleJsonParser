@@ -545,7 +545,6 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
 {
     std::vector<std::pair<String, String>> result;
     uint32_t frstpt = 0, secpt = 0, thipt = 0, forpt = 0;
-    uint count=0;
     char c;
     if (!SPIFFS.begin())
     {
@@ -605,8 +604,6 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
                         thipt++;
                     }
                     result.emplace_back(std::make_pair(key, value));
-                    count++;
-                    Serial.println(String(count));
                     frstpt = 0;
                     secpt = 0;
                     thipt = 0;
