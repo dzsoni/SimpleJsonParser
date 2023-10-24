@@ -545,15 +545,16 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
 {
     std::vector<std::pair<String, String>> result;
 
+    uint32_t count = 0;
     uint32_t frstpt = 0, secpt = 0, thipt = 0, forpt = 0;
+    String result;
     char c;
     if (!SPIFFS.begin())
     {
         // Serious problem
         _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
 
-        result.clear();
-        return result;
+        return String("");
     } // end if
 
     if (SPIFFS.exists(path))
@@ -562,8 +563,7 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
         if (!f)
         {
             _SIMPLEJSON_PL(String(F("File open failed.") + path));
-            result.clear();
-            return result;
+            return String("");
         }
 
         while (f.available())
@@ -579,8 +579,7 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
                 else
                 {
                     _SIMPLEJSON_PL("Corrupt json:{ or , must follow a \"");
-                    result.clear();
-                    return result;
+                    return String("");
                 }
             }
 
