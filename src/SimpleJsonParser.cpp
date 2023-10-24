@@ -544,17 +544,15 @@ String SimpleJsonParser::getJSONValuebyIndexFromString(String jsontxt, int index
 std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFromFile(String path)
 {
     std::vector<std::pair<String, String>> result;
-
-    uint32_t count = 0;
     uint32_t frstpt = 0, secpt = 0, thipt = 0, forpt = 0;
-    String result;
+    
     char c;
     if (!SPIFFS.begin())
     {
         // Serious problem
         _SIMPLEJSON_PL(F("SPIFFS Mount failed."));
-
-        return String("");
+        result.clear();
+        return result;
     } // end if
 
     if (SPIFFS.exists(path))
@@ -563,7 +561,8 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
         if (!f)
         {
             _SIMPLEJSON_PL(String(F("File open failed.") + path));
-            return String("");
+            result.clear();
+            return result;
         }
 
         while (f.available())
@@ -579,7 +578,8 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
                 else
                 {
                     _SIMPLEJSON_PL("Corrupt json:{ or , must follow a \"");
-                    return String("");
+                    result.clear();
+                    return result;
                 }
             }
 
