@@ -45,7 +45,7 @@ String SimpleJsonParser::fileToString(String path)
     return String("");
 }
 
-String SimpleJsonParser::getJSONValueByKeyFromString(String jsontext, String key)
+String SimpleJsonParser::getValueByKeyFromString(String jsontext, String key)
 {
     if (jsontext.length() == 0)
     {
@@ -89,7 +89,7 @@ String SimpleJsonParser::getJSONValueByKeyFromString(String jsontext, String key
     return jsontext.substring(fromPosition);
 }
 
-String SimpleJsonParser::getJSONValueByKeyFromFile(String path, String key)
+String SimpleJsonParser::getValueByKeyFromFile(String path, String key)
 {
     String value = "";
 
@@ -286,7 +286,7 @@ int SimpleJsonParser::getNumberOfEntriesFromString(String jsontxt)
     return count;
 }
 
-String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, uint32_t index)
+String SimpleJsonParser::getKeybyIndexFromFile(String path, uint32_t index)
 {
     uint32_t count = 0;
     uint32_t frstpt = 0, secpt = 0;
@@ -362,7 +362,7 @@ String SimpleJsonParser::getJSONKeybyIndexFromFile(String path, uint32_t index)
     }
     return String("");
 }
-String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, uint32_t index)
+String SimpleJsonParser::getValuebyIndexFromFile(String path, uint32_t index)
 {
     uint32_t count = 0;
     uint32_t oldpt = 0, newpt = 0;
@@ -443,7 +443,7 @@ String SimpleJsonParser::getJSONValuebyIndexFromFile(String path, uint32_t index
 
     return String("");
 }
-String SimpleJsonParser::getJSONKeybyIndexFromString(String jsontxt, int index)
+String SimpleJsonParser::getKeybyIndexFromString(String jsontxt, int index)
 {
     int count = 0;
     uint32_t frstpt = 0, secpt = 0;
@@ -494,7 +494,7 @@ iloopend:
     return String("");
 }
 
-String SimpleJsonParser::getJSONValuebyIndexFromString(String jsontxt, int index)
+String SimpleJsonParser::getValuebyIndexFromString(String jsontxt, int index)
 {
     int count = 0;
     uint32_t oldpt = 0, newpt = 0;

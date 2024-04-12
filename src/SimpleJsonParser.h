@@ -28,15 +28,15 @@ private:
 public:
     SimpleJsonParser();
     ~SimpleJsonParser();
-    String getJSONValueByKeyFromFile(String path, String key);
+    String getValueByKeyFromFile(String path, String key);
     String fileToString(String path);
-    String getJSONValueByKeyFromString(String text, String key);
+    String getValueByKeyFromString(String text, String key);
     int    getNumberOfEntriesFromFile(String path);
     int    getNumberOfEntriesFromString(String jsontxt);
-    String getJSONKeybyIndexFromFile(String path, uint32_t index);
-    String getJSONKeybyIndexFromString(String jsontxt, int index);
-    String getJSONValuebyIndexFromFile(String path,uint32_t index);
-    String getJSONValuebyIndexFromString(String jsontxt,int index);
+    String getKeybyIndexFromFile(String path, uint32_t index);
+    String getKeybyIndexFromString(String jsontxt, int index);
+    String getValuebyIndexFromFile(String path,uint32_t index);
+    String getValuebyIndexFromString(String jsontxt,int index);
     std::vector<std::pair<String,String>> extractKeysandValuesFromFile(String path);
 };
 
