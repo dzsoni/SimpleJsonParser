@@ -557,9 +557,6 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
 
     if (SPIFFS.exists(path))
     {
-        String full=fileToString(path);
-        Serial.println(full);
-
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
