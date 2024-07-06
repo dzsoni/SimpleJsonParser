@@ -192,10 +192,11 @@ void SimpleJsonParser::_skipWhiteSpace(File f)
 {
     if (f)
     {
-        String s;
-        while ((s = f.peek()) == " " || s == "\n" || s == "\r" || s == "\t")
+        char c= (char)f.peek();
+        while (c  == ' ' || c == '\n' || c == '\r' || c == '\t')
         {
-            f.read();
+           f.read();
+           c= (char)f.peek();
         }
     }
 }
@@ -556,6 +557,9 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
 
     if (SPIFFS.exists(path))
     {
+        String full=fileToString(path);
+        Serial.println(full);
+
         File f = SPIFFS.open(path, "r");
         if (!f)
         {
@@ -563,20 +567,20 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
             result.clear();
             return result;
         }
-
+        
         while (f.available())
         {
             if ((((c = (char)f.read()) == ',' || (c == '{'))) && (!frstpt))
             {
                 _skipWhiteSpace(f);
-                if ((c = (char)f.read()) == '"')
+                if((c = (char)f.read()) == '"')
                 {
                     frstpt = f.position();
                     continue;
                 }
                 else
                 {
-                    _SIMPLEJSON_PL("Corrupt json:{ or , must follow a \"");
+                    _SIMPLEJSON_PL("Corrupt json:{ or , must follow a \" at position:" + String(f.position()));
                     result.clear();
                     return result;
                 }
@@ -603,6 +607,7 @@ std::vector<std::pair<String, String>> SimpleJsonParser::extractKeysandValuesFro
                         value += String((char)f.read());
                         thipt++;
                     }
+                    _SIMPLEJSON_PL(key+":"+value);
                     result.emplace_back(std::make_pair(key, value));
                     frstpt = 0;
                     secpt = 0;
