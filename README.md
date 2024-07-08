@@ -32,6 +32,10 @@ You can get the key by index:
 String getJSONKeybyIndexFromFile(String path, int index);
 String getJSONKeybyIndexFromString(String jsontxt, int index);
 ```
+You can get key,value pair in a std:vector<std::pair> from file
+```
+SimpleJsonParser::extractKeysandValuesFromFile(String path)
+```
 Making string from file:
 
 ```
