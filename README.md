@@ -1,6 +1,6 @@
 # SimpleJsonParser
 It's for ESP8266,ESP32 or Arduino devices.
-With SimpleJsonParser you can only parse json that look like this:
+With SimpleJsonParser you can only parse json that looks like this:
 ```
 { "key1":"value1",
   "key2":"value2",
