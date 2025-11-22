@@ -7,6 +7,7 @@
 #include <utility>
 
 #include "FS.h"
+#include "SPIFFS.h"
 
 //#define DEBUG_SIMPLEJSON
 
